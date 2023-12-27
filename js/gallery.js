@@ -74,7 +74,7 @@ const markup = images
                         <img
                             class="gallery-image"
                             src="${preview}"
-                            data-source="large-image.jpg"
+                            data-source="${original}"
                             alt="${description}"
                         />
                     </a>
@@ -95,14 +95,23 @@ function openImage(event) {
     instance = basicLightbox.create(`
         <img src="${selectedItem}" width="800" height="600">
     `);
+    onShow(instance);
+
+    document.addEventListener('keyup', closeImage);
+}
+
+function onShow(instance) {
     instance.show();
 }
+function onClose(instance) {
+    instance.close();
+}
 function closeImage(event) {
-    if (event.keyCode === 27) {
-        instance.close();
+    if (event.key === 'Escape') {
+        onClose(instance);
     }
 }
 
 gallery.addEventListener('click', openImage);
-gallery.addEventListener('keyup', closeImage);
+
 
