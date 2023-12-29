@@ -94,21 +94,18 @@ function openImage(event) {
 
     instance = basicLightbox.create(`
         <img src="${selectedItem}" width="800" height="600">
-    `);
-    onShow(instance);
+    `, {
+        onShow: (instance) => console.log('onShow', instance),
+        onClose: (instance) => console.log('onClose', instance)
+    })
+
+    instance.show();
 
     document.addEventListener('keyup', closeImage);
 }
-
-function onShow(instance) {
-    instance.show();
-}
-function onClose(instance) {
-    instance.close();
-}
 function closeImage(event) {
     if (event.key === 'Escape') {
-        onClose(instance);
+        instance.close();
     }
 }
 
