@@ -92,32 +92,27 @@ function handleClickOpenImage(e) {
     e.preventDefault();
     const selectImage = e.target.parentNode.getAttribute('href');
 
-    if (!e.target.classList.contains('gallery-image')) {
-        return;
-    } else {
+    if (e.target.classList.contains('gallery-image')) {
         createLightbox(selectImage);
+    } else {
+        return;
     }
 }
 function createLightbox(img) {
     const renderImage = `<img src="${img}" width="800" height="600">`;
     const instance = basicLightbox.create(renderImage, {
         closable: false,
-        onShow: (instance) => {
-            console.log('add');
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    instance.close();
-                }
-            });
+        onShow: () => {
+            document.addEventListener('keydown', handelClickCloseModal);
         },
-        onClose: (instance) => {
-            console.log('remove');
-            document.removeEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    instance.close();
-                }
-            });
+        onClose: () => {
+            document.removeEventListener('keydown', handelClickCloseModal);
         }
     });
+    function handelClickCloseModal(e) {
+        if (e.key === 'Escape') {
+            instance.close();
+        }
+    }
     instance.show();
 }
