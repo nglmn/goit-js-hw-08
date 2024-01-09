@@ -1,4 +1,4 @@
-
+// import * as basicLightbox from 'basiclightbox';
 const images = [
     {
         preview:
@@ -70,17 +70,17 @@ const imagesGallery = document.querySelector('.gallery');
 const markup = images
     .map(({ preview, original, description }) => {
         return `
-        <li class="gallery-item">
-            <a class="gallery-link" href="${original}">
-                <img
-                    class="gallery-image"
-                    src="${preview}"
-                    data-source="${original}"
-                    alt="${description}"
-                />
-            </a>
-        </li>
-    `;
+            <li class="gallery-item">
+                <a class="gallery-link" href="${original}">
+                    <img
+                        class="gallery-image"
+                        src="${preview}"
+                        data-source="${original}"
+                        alt="${description}"
+                    />
+                </a>
+            </li>
+        `;
     })
     .join('');
 
@@ -92,24 +92,32 @@ function handleClickOpenImage(e) {
     e.preventDefault();
     const selectImage = e.target.parentNode.getAttribute('href');
 
-    if (e.target.nodeName !== 'IMG') {
+    if (!e.target.classList.contains('gallery-image')) {
         return;
     } else {
         createLightbox(selectImage);
     }
 }
 function createLightbox(img) {
-    const instance = basicLightbox.create(`
-        <img src="${img}" width="800" height="600">
-    `);
-    const visible = instance.show();
-    if (visible) {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                instance.close();
-            }
-        })
-    }
+    const renderImage = `<img src="${img}" width="800" height="600">`;
+    const instance = basicLightbox.create(renderImage, {
+        closable: false,
+        onShow: (instance) => {
+            console.log('add');
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    instance.close();
+                }
+            });
+        },
+        onClose: (instance) => {
+            console.log('remove');
+            document.removeEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    instance.close();
+                }
+            });
+        }
+    });
+    instance.show();
 }
-
-
